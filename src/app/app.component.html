@@ -95,8 +95,11 @@
 >
   <h6>Ganadores - {{ titulo }}</h6>
   <ul class="list-group" style="margin-top: 20px">
-    <li *ngFor="let ganador of valorGanadores" class="list-group-item">
-      {{ ganador }}
+    <li
+      *ngFor="let ganador of valorGanadores; let index = index"
+      class="list-group-item"
+    >
+      {{ index + 1 }} - {{ ganador }}
     </li>
   </ul>
   <div style="margin-top: 20px">
