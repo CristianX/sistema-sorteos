@@ -93,7 +93,7 @@
   *ngIf="mostrarResultados && !mostrarGif"
   style="padding-top: 20px; margin-bottom: 30px"
 >
-  <h6>Ganadores</h6>
+  <h6>Ganadores - {{ titulo }}</h6>
   <ul class="list-group" style="margin-top: 20px">
     <li *ngFor="let ganador of valorGanadores" class="list-group-item">
       {{ ganador }}

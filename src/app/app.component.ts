@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-root',
@@ -26,7 +27,13 @@ export class AppComponent implements OnInit {
   sortear() {
     this.valorGanadores = [];
     if (this.firstFormGroup.invalid) {
-      console.log('Debe llenar todos los campos');
+      Swal.fire({
+        position: 'top-end',
+        icon: 'error',
+        title: 'Debe llenar todos los campos',
+        showConfirmButton: false,
+        timer: 1500,
+      });
     } else {
       this.titulo = this.firstFormGroup.value.inpTituloSorteo;
       console.log('Titulo: ', this.titulo);
@@ -38,9 +45,14 @@ export class AppComponent implements OnInit {
         this.firstFormGroup.value.inpValoresSorteo.split('\n');
 
       if (this.numBeneficiarios > this.valoresSorteo.length - 1) {
-        console.log(
-          'El valor del numero de beneficiarios no puede ser mayor al numero de valores del sorteo'
-        );
+        Swal.fire({
+          position: 'top-end',
+          icon: 'error',
+          title:
+            'El valor del número de beneficiarios no puede ser mayor al numero de valores del sorteo',
+          showConfirmButton: false,
+          timer: 3000,
+        });
       } else {
         this.mostrarGif = true;
         setTimeout(() => {
