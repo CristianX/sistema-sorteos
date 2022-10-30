@@ -12,7 +12,7 @@ export class AppComponent implements OnInit {
 
   public titulo: any;
   public numBeneficiarios: number = 0;
-  private valoresSorteo: any[] = [];
+  public valoresSorteo: any[] = [];
   public valorGanadores: any[] = [];
   public mostrarResultados: boolean = false;
   public mostrarGif: boolean = false;
@@ -73,6 +73,16 @@ export class AppComponent implements OnInit {
           console.log('Valores Ganadores', this.valorGanadores);
           this.mostrarResultados = true;
           this.mostrarGif = false;
+
+          // Borrando ganadores del array de valores
+          for (let i = 0; i < this.valorGanadores.length; i++) {
+            for (let j = 0; j < this.valoresSorteo.length; j++) {
+              if (this.valoresSorteo[j] === this.valorGanadores[i]) {
+                this.valoresSorteo.splice(j, 1);
+              }
+            }
+          }
+          console.log('Valores restantes', this.valoresSorteo);
         }, 5000);
       }
     }

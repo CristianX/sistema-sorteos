@@ -93,15 +93,34 @@
   *ngIf="mostrarResultados && !mostrarGif"
   style="padding-top: 20px; margin-bottom: 30px"
 >
-  <h6>Ganadores - {{ titulo }}</h6>
-  <ul class="list-group" style="margin-top: 20px">
-    <li
-      *ngFor="let ganador of valorGanadores; let index = index"
-      class="list-group-item"
-    >
-      {{ index + 1 }} - {{ ganador }}
-    </li>
-  </ul>
+  <div>
+    <h6>Ganadores - {{ titulo }}</h6>
+    <ul class="list-group" style="margin-top: 20px">
+      <li
+        *ngFor="let ganador of valorGanadores; let index = index"
+        class="list-group-item"
+      >
+        {{ index + 1 }} - {{ ganador }}
+      </li>
+    </ul>
+  </div>
+  <div style="margin-top: 20px">
+    <h6>Restantes</h6>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Número</th>
+          <th scope="col">Nombre</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let restante of valoresSorteo; let index = index">
+          <th scope="row">{{ index + 1 }}</th>
+          <th>{{ restante }}</th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <div style="margin-top: 20px">
     <button class="btn btn-primary" style="width: 100%" (click)="nuevoSorteo()">
       Nuevo Sorteo
