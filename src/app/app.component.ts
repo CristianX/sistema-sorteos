@@ -21,6 +21,7 @@ export class AppComponent implements OnInit {
   public mostrarResultados: boolean = false;
   public mostrarGif: boolean = false;
   private valuesTable: any[] = [];
+  pageActual: number = 1;
 
   firstFormGroup = this._formBuilder.group({
     inpTituloSorteo: ['', Validators.required],
