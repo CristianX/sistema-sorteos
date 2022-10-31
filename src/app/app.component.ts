@@ -5,6 +5,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { auto } from '@popperjs/core';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-root',
@@ -22,6 +23,7 @@ export class AppComponent implements OnInit {
   public mostrarGif: boolean = false;
   private valuesTable: any[] = [];
   pageActual: number = 1;
+  private nombreArchivoExel: string = 'Restantes.xlsx';
 
   firstFormGroup = this._formBuilder.group({
     inpTituloSorteo: ['', Validators.required],
@@ -192,5 +194,15 @@ export class AppComponent implements OnInit {
 
       img.src = url;
     });
+  }
+
+  exportToExcel(): void {
+    let element = document.getElementById('season-tble');
+    const worksheet: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+
+    const book: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(book, worksheet, 'Sheet1');
+
+    XLSX.writeFile(book, this.nombreArchivoExel);
   }
 }

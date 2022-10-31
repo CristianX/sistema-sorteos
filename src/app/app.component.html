@@ -111,7 +111,10 @@
   </div>
   <div style="margin-top: 20px">
     <h6>Restantes</h6>
-    <table class="table">
+    <button class="btn btn-success" (click)="exportToExcel()">
+      Exportar a Excel
+    </button>
+    <!-- <table class="table">
       <thead>
         <tr>
           <th scope="col">Número</th>
@@ -135,8 +138,25 @@
       (pageChange)="pageActual = $event"
       previousLabel="Anterior"
       nextLabel="Siguiente"
-    ></pagination-controls>
-    <div class="d-flex justify-content-between p-2"></div>
+    ></pagination-controls> -->
+
+    <!-- tabla para archivo excel -->
+    <div>
+      <table class="table" id="season-tble">
+        <thead>
+          <tr>
+            <th scope="col">Número</th>
+            <th scope="col">Nombre</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let restante of valoresSorteo; let index = index">
+            <th scope="row">{{ (pageActual - 1) * 7 + index + 1 }}</th>
+            <th>{{ restante }}</th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
   <div style="margin-top: 20px">
     <button class="btn btn-primary" style="width: 100%" (click)="nuevoSorteo()">
