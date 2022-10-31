@@ -95,14 +95,20 @@
 >
   <div>
     <h6>Ganadores - {{ titulo }}</h6>
-    <ul class="list-group" style="margin-top: 20px">
-      <li
-        *ngFor="let ganador of valorGanadores; let index = index"
-        class="list-group-item"
-      >
-        {{ index + 1 }} - {{ ganador }}
-      </li>
-    </ul>
+    <table class="table table-striped table-hover">
+      <thead class="table-success">
+        <tr>
+          <th scope="col" style="width: 10%">Número</th>
+          <th scope="col">Nombre</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ganador of valorGanadores; let index = index">
+          <th scope="row">{{ index + 1 }}</th>
+          <th>{{ ganador }}</th>
+        </tr>
+      </tbody>
+    </table>
     <div style="margin-top: 20px">
       <button class="btn btn-primary" style="width: 100%" (click)="createPDF()">
         Imprimir
@@ -111,7 +117,11 @@
   </div>
   <div style="margin-top: 20px">
     <h6>Restantes</h6>
-    <button class="btn btn-success" (click)="exportToExcel()">
+    <button
+      class="btn btn-success"
+      (click)="exportToExcel()"
+      style="margin-bottom: 10px"
+    >
       Exportar a Excel
     </button>
     <!-- <table class="table">
@@ -142,16 +152,16 @@
 
     <!-- tabla para archivo excel -->
     <div>
-      <table class="table" id="season-tble">
-        <thead>
+      <table class="table table-striped table-hover" id="season-tble">
+        <thead class="table-warning">
           <tr>
-            <th scope="col">Número</th>
+            <th scope="col" style="width: 10%">Número</th>
             <th scope="col">Nombre</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let restante of valoresSorteo; let index = index">
-            <th scope="row">{{ (pageActual - 1) * 7 + index + 1 }}</th>
+            <th scope="row">{{ index + 1 }}</th>
             <th>{{ restante }}</th>
           </tr>
         </tbody>

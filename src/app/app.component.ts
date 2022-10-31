@@ -154,7 +154,7 @@ export class AppComponent implements OnInit {
         return [
           {
             text: 'Página ' + currentPage.toString() + ' de ' + pageCount,
-            margin: [0, 0, 10, 0],
+            margin: [0, 0, 20, 0],
             alignment: 'right',
           },
         ];
