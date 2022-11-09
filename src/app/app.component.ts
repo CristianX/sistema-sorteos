@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 export class AppComponent implements OnInit {
   constructor(private _formBuilder: FormBuilder) {}
 
+  public title = 'sistema-sorteos';
   public titulo: any;
   public numBeneficiarios: number = 0;
   private valoresSorteo: any[] = [];
