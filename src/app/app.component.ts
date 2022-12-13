@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { auto } from '@popperjs/core';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-root',
@@ -13,10 +18,13 @@ export class AppComponent implements OnInit {
   public title = 'sistema-sorteos';
   public titulo: any;
   public numBeneficiarios: number = 0;
-  private valoresSorteo: any[] = [];
+  public valoresSorteo: any[] = [];
   public valorGanadores: any[] = [];
   public mostrarResultados: boolean = false;
   public mostrarGif: boolean = false;
+  private valuesTable: any[] = [];
+  pageActual: number = 1;
+  private nombreArchivoExel: string = 'Restantes.xlsx';
 
   firstFormGroup = this._formBuilder.group({
     inpTituloSorteo: ['', Validators.required],
@@ -27,6 +35,7 @@ export class AppComponent implements OnInit {
 
   sortear() {
     this.valorGanadores = [];
+    this.valuesTable = [];
     if (this.firstFormGroup.invalid) {
       Swal.fire({
         position: 'top-end',
@@ -74,13 +83,127 @@ export class AppComponent implements OnInit {
           console.log('Valores Ganadores', this.valorGanadores);
           this.mostrarResultados = true;
           this.mostrarGif = false;
+
+          // Borrando ganadores del array de valores
+          for (let i = 0; i < this.valorGanadores.length; i++) {
+            for (let j = 0; j < this.valoresSorteo.length; j++) {
+              if (this.valoresSorteo[j] === this.valorGanadores[i]) {
+                this.valoresSorteo.splice(j, 1);
+              }
+            }
+          }
+          for (let i = 0; i < this.valorGanadores.length; i++) {
+            this.valuesTable.push([(i + 1).toString(), this.valorGanadores[i]]);
+          }
+          console.log('Valores restantes', this.valoresSorteo);
         }, 5000);
       }
     }
   }
 
+  async createPDF() {
+    const pdfDefinition: any = {
+      pageMargins: [40, 210, 40, 60],
+      header: [
+        {
+          image: await this.getBase64ImageFromURL(
+            '../../assets/img/LogoMunicipioColor.svg'
+          ),
+          width: 400,
+          alignment: 'center',
+          margin: [0, 4, 0, 0],
+        },
+        {
+          text: 'Administración General\n',
+          style: 'header',
+          alignment: 'center',
+        },
+        {
+          text: 'DIRECCIÓN METROPOLITANA DE RECURSOS HUMANOS\n\n',
+          style: 'header',
+          alignment: 'center',
+        },
+        {
+          text: 'PROCESO DE SELECCIÓN Y CONTRATACIÓN DE PERSONAL BAJO LA MODALIDAD DEL CÓDIGO DEL TRABAJO \n\n',
+          style: 'subheader',
+          alignment: 'center',
+          margin: [15, 0],
+        },
+        {
+          text: `${this.titulo}\n\n`,
+          style: 'subheader',
+          alignment: 'center',
+        },
+      ],
+      content: [
+        'Listado de ganadores: \n\n',
+        {
+          columns: [
+            { width: '*', text: '' },
+            {
+              width: 'auto',
+              table: {
+                body: [['N°', 'Nombre'], ...this.valuesTable],
+                aligment: 'center',
+              },
+            },
+            { width: '*', text: '' },
+          ],
+        },
+      ],
+      footer: function (currentPage, pageCount) {
+        return [
+          {
+            text: 'Página ' + currentPage.toString() + ' de ' + pageCount,
+            margin: [0, 0, 20, 0],
+            alignment: 'right',
+          },
+        ];
+      },
+    };
+
+    const pdf = pdfMake.createPdf(pdfDefinition);
+    pdf.open();
+  }
+
   nuevoSorteo() {
     this.mostrarResultados = false;
     this.firstFormGroup.reset();
+  }
+
+  getBase64ImageFromURL(url) {
+    return new Promise((resolve, reject) => {
+      var img = new Image();
+      img.setAttribute('crossOrigin', 'anonymous');
+
+      img.onload = () => {
+        var canvas = document.createElement('canvas');
+        canvas.width = img.width * 3;
+        canvas.height = img.height * 3;
+
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+
+        var dataURL = canvas.toDataURL('image/png');
+
+        resolve(dataURL);
+      };
+
+      img.onerror = (error) => {
+        reject(error);
+      };
+
+      img.src = url;
+    });
+  }
+
+  exportToExcel(): void {
+    let element = document.getElementById('season-tble');
+    const worksheet: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+
+    const book: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(book, worksheet, 'Sheet1');
+
+    XLSX.writeFile(book, this.nombreArchivoExel);
   }
 }
