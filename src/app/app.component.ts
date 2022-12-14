@@ -25,6 +25,7 @@ export class AppComponent implements OnInit {
   private valuesTable: any[] = [];
   pageActual: number = 1;
   private nombreArchivoExel: string = 'Restantes.xlsx';
+  private isEmpty = false;
 
   firstFormGroup = this._formBuilder.group({
     inpTituloSorteo: ['', Validators.required],
@@ -54,12 +55,31 @@ export class AppComponent implements OnInit {
       this.valoresSorteo =
         this.firstFormGroup.value.inpValoresSorteo.split('\n');
 
+      // Validando que no existan valores vacios
+      this.isEmpty = Object.values(this.valoresSorteo).some((x) => x === '');
+
       if (this.numBeneficiarios > this.valoresSorteo.length - 1) {
         Swal.fire({
           position: 'top-end',
           icon: 'error',
           title:
             'El valor del número de beneficiarios no puede ser mayor al numero de valores del sorteo',
+          showConfirmButton: false,
+          timer: 3000,
+        });
+      } else if (hasDuplicates(this.valoresSorteo)) {
+        Swal.fire({
+          position: 'top-end',
+          icon: 'error',
+          title: 'Valores Duplicados',
+          showConfirmButton: false,
+          timer: 3000,
+        });
+      } else if (this.isEmpty) {
+        Swal.fire({
+          position: 'top-end',
+          icon: 'error',
+          title: 'Uno o más valores ingresados están vacios',
           showConfirmButton: false,
           timer: 3000,
         });
@@ -75,7 +95,7 @@ export class AppComponent implements OnInit {
           arr.sort(() => (Math.random() > 0.5 ? 1 : -1));
 
           const loteria = arr.slice(0, this.numBeneficiarios);
-          console.log('Valores loretia', loteria);
+          console.log('Valores lotetia', loteria);
 
           for (let index = 0; index < loteria.length; index++) {
             this.valorGanadores.push(this.valoresSorteo[loteria[index]]);
@@ -207,4 +227,9 @@ export class AppComponent implements OnInit {
 
     XLSX.writeFile(book, this.nombreArchivoExel);
   }
+}
+
+// Evaluación de array con valores duplicados
+function hasDuplicates(array) {
+  return new Set(array).size !== array.length;
 }
