@@ -65,10 +65,11 @@ export class AppComponent implements OnInit {
       } else {
         this.mostrarGif = true;
         setTimeout(() => {
-          const n = this.valoresSorteo.length - 1;
+          const n = this.valoresSorteo.length;
+          console.log('Numero de valores', n);
           const arr = new Array(n);
           for (let i = 0; i < n; i++) {
-            arr[i] = i + 1;
+            arr[i] = i;
           }
           arr.sort(() => (Math.random() > 0.5 ? 1 : -1));
 
